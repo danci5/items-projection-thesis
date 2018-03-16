@@ -1,0 +1,1 @@
+# vsetky z clanku
