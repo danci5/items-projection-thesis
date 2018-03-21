@@ -1,10 +1,10 @@
 """
-USAGE: python process_wiki.py cswiki-latest-pages-articles.xml.bz2 wiki.cs.text
+Usage: python process_wiki.py cswiki-latest-pages-articles.xml.bz2 wiki.cs.text
 
 Script for converting articles from a Wikipedia dump to a file containing the texts from the
-articles. A single line is an article, articles are separated by a newline.
+articles. A single line is an article, articles are separated by a new line.
 
-Download latest Wikipedia dump from:
+Download latest CS Wikipedia dump from:
 - https://dumps.wikimedia.org/cswiki/latest/cswiki-latest-pages-articles.xml.bz2
 Adapted from:
 - http://textminingonline.com/training-word2vec-model-on-english-wikipedia-by-gensim

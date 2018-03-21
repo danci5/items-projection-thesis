@@ -1,13 +1,12 @@
 """
 Script for preparing data and creating similarity matrix.
-Created based on the 'data_preparation' jupyter notebook.
 """
 
 import re
-import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import os
+from similarities.performance_similarities import *
 
 
 def cut_question(question):
@@ -36,60 +35,6 @@ def merge_data_with_practice_sets(logs_questions, practice_sets, ps_mapping):
                          'question', 'url', 'ps', 'parent', 'exercise']]
     crucial_data = crucial_data.rename(columns={'correct_question': 'correct_answer', 'parent': 'parent_kc'})
     return crucial_data
-
-
-def get_counts_of_answers_for_ps(crucial_data, system_ps, export=False):
-    """get practice sets with theirs counts of answers"""
-    count_practice_sets = crucial_data['ps'].value_counts()
-    practice_sets_table = system_ps[['id','url']].set_index('id')
-    practice_sets_answers_count = count_practice_sets.to_frame().join(practice_sets_table)
-    practice_sets_answers_count.columns = ['count', 'url']
-    practice_sets_answers_count.index.names = ['ps_id']
-
-    if export:
-        practice_sets_answers_count.to_csv('data/processed/counts_of_questions_for_practice_sets.csv')
-
-    return practice_sets_answers_count
-
-
-def plot_practice_sets_with_most_answers(data_ps, system_ps):
-    df = get_counts_of_answers_for_ps(data_ps, system_ps).head(15)
-    df.plot(kind='bar')
-    plt.gcf().set_size_inches(12, 8)
-    plt.title('Count of answers for practice sets (top15)', color='black')
-    plt.xlabel('practice_set_id')
-    plt.savefig('visualizations/matplotlib/count_of_questions_for_practice_sets.png')
-    plt.show()
-
-
-def reshape_to_correctness_matrix(data):
-    """
-        Reshapes data to matrix where the users are the indices(rows) and columns are the questions.
-        The values in the matrix are specified by the correctness of the user's answer.
-        """
-
-    if pd.Series(['user','question_id','correct']).isin(data.columns).all():
-        # we want only first occurrence
-        # drop_duplicates - default is 'Drop duplicates except for the first occurrence'
-        data = data.drop_duplicates(['user','question_id'])
-
-        # alternative - handles duplicates
-        # pd.pivot_table(data, values='correct', index='user',columns='question_id')
-        similarity_matrix = data.pivot(index='user', columns='question_id', values='correct')
-        return similarity_matrix
-    else:
-        print("Data are already pivoted or doesn't have the right structure.")
-        return data
-
-
-def correctness_matrix_to_similarity_matrix(method, matrix):
-    if method == 'pearson':
-        similarity_matrix = remove_nans(matrix.corr())
-    elif method == 'doublepearson':
-        similarity_matrix = remove_nans(matrix.corr())
-        similarity_matrix = remove_nans(similarity_matrix.corr())
-
-    return similarity_matrix
 
 
 def get_data_for_practice_sets(practice_sets_numbers, crucial_data):
@@ -122,16 +67,33 @@ def get_vyjmenovana_slova_po_b(crucial_data):
     return data
 
 
-def remove_nans(similarity_matrix):
-    """Removes NaN values from matrix and returns the matrix."""
+def reshape_to_correctness_matrix(data):
+    """
+        Reshapes data to matrix where the users are the indices(rows) and columns are the questions.
+        The values in the matrix are specified by the correctness of the user's answer.
+        """
 
-    # not using pandas dropna because it would drop the label if any NA values are present
-    # therefore I will find the row, which has the most NaNs and drop that one
+    if pd.Series(['user','question_id','correct']).isin(data.columns).all():
+        # we want only first occurrence
+        # drop_duplicates - default is 'Drop duplicates except for the first occurrence'
+        data = data.drop_duplicates(['user','question_id'])
 
-    while similarity_matrix.isnull().sum().sum() > 0:
-        most_nans = similarity_matrix.isnull().sum().idxmax()
-        similarity_matrix = similarity_matrix.drop(most_nans, axis=0)
-        similarity_matrix = similarity_matrix.drop(most_nans, axis=1)
+        # alternative - handles duplicates
+        # pd.pivot_table(data, values='correct', index='user',columns='question_id')
+        similarity_matrix = data.pivot(index='user', columns='question_id', values='correct')
+        return similarity_matrix
+    else:
+        print("Data are already pivoted or doesn't have the right structure.")
+        return data
+
+
+def correctness_matrix_to_similarity_matrix(method, matrix):
+    if method == 'pearson':
+        similarity_matrix = pearson_similarity(matrix)
+    elif method == 'doublepearson':
+        similarity_matrix = doublepearson_similarity(matrix)
+    elif method == 'jaccard':
+        similarity_matrix = similarity_jaccard(matrix)
 
     return similarity_matrix
 
@@ -182,29 +144,8 @@ def get_solutions(data, method='fillin'):
     return solutions
 
 
-def create_dataframe_for_visualization(x_positions, y_positions, labels, practice_sets):
-    """Creates dataframe with x,y positions and their labels, practice sets."""
-    df = {'x': x_positions, 'y': y_positions, 'label': labels, 'ps': practice_sets}
-    df = pd.DataFrame(data=d)
-    df.index.name = 'id'
-    return df
-
-
-def simple_scatterplot(figure_size=(30,20),export=False, title='default'):
-    """Matplotlib simple scatterplot from dataframe for visualization."""
-    x, y = figure_size
-    plt.gcf().set_size_inches(x, y)
-    plt.title(title)
-    plt.xlabel('x_positions')
-    plt.ylabel('y_positions')
-    plt.scatter(df['x'], df['y'])
-    if export:
-        plt.savefig('visualizations/matplotlib/%s.png' % title)
-    plt.show()
-
-
 if __name__ == '__main__':
-    os.chdir('/home/daniel/school/BP')
+    os.chdir('/home/daniel/school/BP/pythesis')
 
     logs = pd.read_csv('data/nova_doplnovacka_log.csv', sep=';')
     questions = pd.read_csv('data/nova_doplnovacka_questions.csv', sep=';')

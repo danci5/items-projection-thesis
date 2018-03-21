@@ -1,5 +1,5 @@
 """
-USAGE: python create_word2vec_model.py wiki.cs.text model_cs.word2vec True
+Usage: python create_word2vec_model.py wiki.cs.text word2vec.model
 
 Script for creating/training a word2vec model.
 """
