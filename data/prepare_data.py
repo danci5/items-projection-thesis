@@ -92,8 +92,6 @@ def correctness_matrix_to_similarity_matrix(method, matrix):
         similarity_matrix = pearson_similarity(matrix)
     elif method == 'doublepearson':
         similarity_matrix = doublepearson_similarity(matrix)
-    elif method == 'jaccard':
-        similarity_matrix = similarity_jaccard(matrix)
 
     return similarity_matrix
 
