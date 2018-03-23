@@ -4,14 +4,14 @@ from data.prepare_word2vec import *
 
 model = Word2Vec.load('utils/word2vec.model')
 slova_po_b = pd.read_csv('data/processed/vyjmenovana_slova_po_b.csv')
-X, labels, solutions, full_solutions = get_word2vec_items_tuple(model, slova_po_b)
+X, data = get_word2vec_items(model, slova_po_b)
 
-# word2vec_similarity_matrix = create_word2vec_similarity_matrix(model, full_solutions, solutions)
+# word2vec_similarity_matrix = create_word2vec_similarity_matrix(model, data['question'], data['solution'])
 # word2vec_similarity_matrix.to_csv('data/processed/word2vec_words_similarity_matrix_slova_po_b2.csv')
 word2vec_similarity_matrix = pd.read_csv('data/processed/word2vec_similarity_matrix_slova-po-b.csv', index_col=0)
 
 # only words which are also in my word2vec model
-vyjm_slova_filtered = slova_po_b.loc[slova_po_b['question'].isin(labels)]
+vyjm_slova_filtered = slova_po_b.loc[slova_po_b['question'].isin(data['question'])]
 correctness_matrix = reshape_to_correctness_matrix(vyjm_slova_filtered)
 similarity_matrix = correctness_matrix_to_similarity_matrix('doublepearson', correctness_matrix)
 similarity_matrix2 = correctness_matrix_to_similarity_matrix('pearson', correctness_matrix)
@@ -40,7 +40,7 @@ similarities['dpearson'] = similarity_matrix2.values.flatten()
 similarities['word2vec'] = word2vec_similarity_matrix.values.flatten()
 similarities_final = similarities.corr()
 
-# TODO: add similarities from the article
+# TODO: add similarities from the article and edit distance
 # Then I should maybe fill 0 instead of removing NaN values
 
 # https://stackoverflow.com/questions/11620914/removing-nan-values-from-an-array

@@ -1,4 +1,5 @@
 # Similarity measures mainly from https://www.fi.muni.cz/~xpelanek/publications/similarity-measures.pdf
+# TODO: add similarities from the article
 
 
 def drop_nans(similarity_matrix):
