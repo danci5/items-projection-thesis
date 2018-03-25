@@ -1,8 +1,10 @@
+import plotly.offline as offline
+import plotly.graph_objs as go
 import matplotlib.pyplot as plt
 
 
 class Projection():
-    
+
     def __init__(self, x_positions, y_positions, data, data_name=None, model=None):
         self.x_positions = x_positions
         self.y_positions = y_positions
@@ -48,6 +50,50 @@ class Projection():
             plt.savefig(save_path)
         plt.show()
 
-    def plotly_with_manual_labels(self, figsize=(40,30), annotate=True, export=True, save_path='visualizations/vis.png'):
-        # TODO: add implementation for plotly
-        pass
+    def plotly_with_manual_labels(self, annotate=True, save_path='visualizations/vis.html'):
+        plotly_data = self.data.copy()
+        plotly_data['x_position'] = self.x_positions
+        plotly_data['y_position'] = self.y_positions
+
+        manual_labels = plotly_data['manual_label'].unique()
+        traces = []
+
+        for label in manual_labels:
+            current_trace = plotly_data[plotly_data['manual_label'] == label]
+            trace = go.Scatter(
+                x=current_trace['x_position'],
+                y=current_trace['y_position'],
+                mode='markers+text' if annotate else 'markers',
+                name='GROUP {0}'.format(label) if label != 0 else 'UNLABELED DATA',
+                text=current_trace['question'],
+                hoverinfo='text',
+                textposition='middle right'
+            )
+            traces.append(trace)
+
+        layout = go.Layout(
+            title="Used: {0}, {1}".format(self.data_name, self.model),
+            titlefont={'family': 'Arial', 'size': 20},
+            showlegend=True,
+            xaxis=dict(
+                autorange=True,
+                showgrid=False,
+                zeroline=False,
+                showline=True,
+                autotick=True,
+                ticks="outside",
+                showticklabels=True
+            ),
+            yaxis=dict(
+                autorange=True,
+                showgrid=False,
+                zeroline=False,
+                showline=True,
+                autotick=True,
+                ticks="outside",
+                showticklabels=True
+            ),
+            hovermode='closest'
+        )
+        fig = go.Figure(data=traces, layout=layout)
+        plot_url = offline.plot(fig, filename=save_path)

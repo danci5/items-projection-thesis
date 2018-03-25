@@ -1,48 +1,58 @@
 from gensim.models import Word2Vec
+import seaborn as sns
 from data.prepare_data import *
-from data.prepare_word2vec import *
+from data.prepare_word2vec_ed import *
+import matplotlib.pyplot as plt
+from similarities.text_similarities import levenshtein_similarity, levenshtein_similarity2
 
 model = Word2Vec.load('utils/word2vec.model')
 slova_po_b = pd.read_csv('data/processed/vyjmenovana_slova_po_b.csv')
 X, data = get_word2vec_items(model, slova_po_b)
+# data - only words which are also in my word2vec model
 
-# word2vec_similarity_matrix = create_word2vec_similarity_matrix(model, data['question'], data['solution'])
-# word2vec_similarity_matrix.to_csv('data/processed/word2vec_words_similarity_matrix_slova_po_b2.csv')
-word2vec_similarity_matrix = pd.read_csv('data/processed/word2vec_similarity_matrix_slova-po-b.csv', index_col=0)
+### ED ###
+# edit1 = create_edit_similarity_matrix(data['full_solution'], data['solution'], levenshtein_similarity)
+# edit2 = create_edit_similarity_matrix(data['full_solution'], data['solution'], levenshtein_similarity2)
+# edit1 = edit_similarity_matrix.astype(float)
+# edit1.to_csv('data/processsed/levenshtein_similarity_matrix_slova-po-b.csv')
+# edit2 = edit_similarity_matrix.astype(float)
+# edit2.to_csv('data/processed/levenshtein2_similarity_matrix_slova-po-b.csv')
+edit1 = pd.read_csv('data/processed/levenshtein_similarity_matrix_slova-po-b.csv', index_col=0)
+edit2 = pd.read_csv('data/processed/levenshtein2_similarity_matrix_slova-po-b.csv', index_col=0)
 
-# only words which are also in my word2vec model
+### word2vec ###
+# word2vec = create_word2vec_similarity_matrix(model, data['full_solution'], data['solution'])
+# word2vec.to_csv('data/processed/word2vec_words_similarity_matrix_slova_po_b.csv')
+word2vec = pd.read_csv('data/processed/word2vec_similarity_matrix_slova-po-b.csv', index_col=0)
+
+### pearson ###
 vyjm_slova_filtered = slova_po_b.loc[slova_po_b['question'].isin(data['question'])]
 correctness_matrix = reshape_to_correctness_matrix(vyjm_slova_filtered)
-similarity_matrix = correctness_matrix_to_similarity_matrix('doublepearson', correctness_matrix)
-similarity_matrix2 = correctness_matrix_to_similarity_matrix('pearson', correctness_matrix)
+pearson1 = correctness_matrix_to_similarity_matrix('doublepearson', correctness_matrix)
+pearson2 = correctness_matrix_to_similarity_matrix('pearson', correctness_matrix)
 
-# similarity_matrix.columns = word2vec_similarity_matrix.columns
-# similarity_matrix.index = word2vec_similarity_matrix.index
-# similarity_matrix['sbírka známek'].corr(word2vec_similarity_matrix['sbírka známek'])
-
-# one way to compare similarity measures
-sim_matrix_doublepearvec = pd.Series(similarity_matrix.values.flatten())
-sim_matrix_pearvec = pd.Series(similarity_matrix2.values.flatten())
-sim_matrix_wordvec = pd.Series(word2vec_similarity_matrix.values.flatten())
-
-print('doublepearson vs pearson: %s' % (sim_matrix_doublepearvec.corr(sim_matrix_pearvec)))
-print('doublepearson vs word2vec: %s' % (sim_matrix_doublepearvec.corr(sim_matrix_wordvec)))
-print('pearson vs word2vec: %s' % (sim_matrix_pearvec.corr(sim_matrix_wordvec)))
-# correlation coefficient matrix
-
-# second way to compare similarity measures
-corrcoef_matrix = np.corrcoef([similarity_matrix.values.flatten(), similarity_matrix2.values.flatten(), word2vec_similarity_matrix.values.flatten()])
-
-# third way to compare similarity measures
+# correlation matrix
 similarities = pd.DataFrame()
-similarities['pearson'] = similarity_matrix.values.flatten()
-similarities['dpearson'] = similarity_matrix2.values.flatten()
-similarities['word2vec'] = word2vec_similarity_matrix.values.flatten()
+similarities['dpearson'] = pearson1.values.flatten()
+similarities['pearson'] = pearson2.values.flatten()
+similarities['word2vec'] = word2vec.values.flatten()
+similarities['lev1'] = edit1.values.flatten().astype(float)
+similarities['lev2'] = edit2.values.flatten().astype(float)
 similarities_final = similarities.corr()
 
-# TODO: add similarities from the article and edit distance
+# TODO: add similarities from the article
 # Then I should maybe fill 0 instead of removing NaN values
 
-# https://stackoverflow.com/questions/11620914/removing-nan-values-from-an-array
-matrix_vec = correctness_matrix.values.flatten()
-matrix_vec = matrix_vec[~np.isnan(matrix_vec)]
+# matplotlib correlation matrix plot matshow
+# plt.matshow(similarities_final.corr())
+# plt.gcf().set_size_inches(6, 4)
+# plt.xticks(range(len(similarities_final.columns)), similarities_final.columns)
+# plt.yticks(range(len(similarities_final.columns)), similarities_final.columns)
+# plt.colorbar()
+# plt.savefig('visualizations/heatmap.png')
+# plt.show()
+
+# http://seaborn.pydata.org/generated/seaborn.heatmap.html
+sns.heatmap(similarities_final, annot=True, fmt=".2f", vmin=0)
+plt.savefig('visualizations/heatmap.png')
+plt.show()

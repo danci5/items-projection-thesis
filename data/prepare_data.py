@@ -142,6 +142,17 @@ def get_solutions(data, method='fillin'):
     return solutions
 
 
+def get_labeled_data(data, label_groups):
+    """Data should have the 'full_solution' column to be labeled."""
+
+    if 'full_solution' not in data.columns:
+        raise ValueError("No column 'full_solution' in data.")
+    data['manual_label'] = 0
+    for label, group in enumerate(label_groups, 1):
+        data.loc[data['full_solution'].isin(group), 'manual_label'] = label
+    return data
+
+
 if __name__ == '__main__':
     os.chdir('/home/daniel/school/BP/pythesis')
 

@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 from data.prepare_data import get_solutions
+from similarities.text_similarities import levenshtein_similarity
 
 
 def get_word2vec_items_tuple(model, data):
@@ -57,7 +58,7 @@ def get_word2vec_items(model, data):
             X.append(model.wv[solution])
             ids.append(id)
         except KeyError:
-            print("Word '{}' is not in vocabulary of your model, therefore it won't be in your visualization.".format(
+            print("Word '{}' is not in vocabulary of your model, therefore it's not in the resulting data.".format(
                 solution))
     return X, data[data['id'].isin(ids)].copy()
 
@@ -72,9 +73,25 @@ def create_word2vec_similarity_matrix(model, full_solutions, solutions):
     dataframe = pd.DataFrame(index=full_solutions,columns=full_solutions)
     for i, j in zip(solutions, full_solutions):
         for k, l in zip(solutions, full_solutions):
-                dataframe.loc[j,l] = model.wv.similarity(i, k)
+                dataframe.loc[j, l] = model.wv.similarity(i, k)
     return dataframe
 
+
+def create_edit_similarity_matrix(full_solutions, solutions, similarity_function=levenshtein_similarity):
+    """Index of the matrix is the full solution, but the similarity is counted only on the words which contain
+    the "fill-in-the-blank" place.
+    
+    Example: 
+    -'sb_rka známek' and 'b_lá barva' 
+    -edit distance is counted on 'sbírka' and 'bíla'
+    -index in the matrix are going to be the full solutions 'sbírka známek' and 'bíla barva'
+    """
+    dataframe = pd.DataFrame(index=full_solutions,columns=full_solutions)
+    for i, j in zip(solutions, full_solutions):
+        for k, l in zip(solutions, full_solutions):
+                dataframe.loc[j, l] = similarity_function(i, k)
+    return dataframe
+    
 
 if __name__ == '__main__':
     os.chdir('/home/daniel/school/BP/pythesis')
