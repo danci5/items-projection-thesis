@@ -27,19 +27,19 @@ def minimum_edit_distance(s1, s2):
     return distances[-1]
 
 
-def distance_ratio(s1, s2):
-    return minimum_edit_distance(s1, s2) / max(len(s1), len(s2))
+# def distance_ratio(s1, s2):
+#     return minimum_edit_distance(s1, s2) / max(len(s1), len(s2))
+#
+#
+# def levenshtein_similarity(s1, s2):
+#     """Basic levenshtein similarity.
+#
+#     normalization: ed(s1,s2) / max(len(s1),len(s2))
+#     """
+#     return 1 - distance_ratio(s1, s2)
 
 
 def levenshtein_similarity(s1, s2):
-    """Basic levenshtein similarity.
-
-    normalization: ed(s1,s2) / max(len(s1),len(s2))
-    """
-    return 1 - distance_ratio(s1, s2)
-
-
-def levenshtein_similarity2(s1, s2):
     """Basic levenshtein similarity with another way for normalization.
 
     normalization: (max(len(s1),len(s2)) - ed(s1,s2)) / max(len(s1),len(s2)
