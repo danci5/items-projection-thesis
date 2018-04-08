@@ -12,13 +12,9 @@ X, data = get_word2vec_items(model, slova_po_b)
 
 ### ED ###
 # edit1 = create_edit_similarity_matrix(data['full_solution'], data['solution'], levenshtein_similarity)
-# edit2 = create_edit_similarity_matrix(data['full_solution'], data['solution'], levenshtein_similarity2)
-# edit1 = edit_similarity_matrix.astype(float)
+# edit1 = edit1.astype(float)
 # edit1.to_csv('data/processsed/levenshtein_similarity_matrix_slova-po-b.csv')
-# edit2 = edit_similarity_matrix.astype(float)
-# edit2.to_csv('data/processed/levenshtein2_similarity_matrix_slova-po-b.csv')
 edit1 = pd.read_csv('data/processed/levenshtein_similarity_matrix_slova-po-b.csv', index_col=0)
-edit2 = pd.read_csv('data/processed/levenshtein2_similarity_matrix_slova-po-b.csv', index_col=0)
 
 ### word2vec ###
 # word2vec = create_word2vec_similarity_matrix(model, data['full_solution'], data['solution'])
@@ -37,7 +33,6 @@ similarities['dpearson'] = pearson1.values.flatten()
 similarities['pearson'] = pearson2.values.flatten()
 similarities['word2vec'] = word2vec.values.flatten()
 similarities['lev1'] = edit1.values.flatten().astype(float)
-similarities['lev2'] = edit2.values.flatten().astype(float)
 similarities_final = similarities.corr()
 
 # TODO: add similarities from the article

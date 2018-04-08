@@ -119,10 +119,10 @@ def get_solutions(data, method='fillin'):
        - full : nabít pušku
        - fillin : nabít
        - fillinextra : nab(í)t
-
+    """
     # http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.iterrows.html
     # https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.itertuples.html
-    """
+
     solutions = []
     for index, row in data.iterrows():
         if row['question'].count('_') > 1:
@@ -143,7 +143,9 @@ def get_solutions(data, method='fillin'):
 
 
 def label_data(data, label_groups):
-    """Data should have the 'full_solution' column to be labeled."""
+    """Adds column 'manual_label'.
+    Data should have the 'full_solution' column to be labeled.
+    """
 
     if 'full_solution' not in data.columns:
         raise ValueError("No column 'full_solution' in data.")

@@ -4,7 +4,7 @@ from data.prepare_data import get_solutions
 from similarities.text_similarities import levenshtein_similarity
 
 
-def get_word2vec_items_tuple(model, data):
+def get_word2vec_items_tuple(model, data, verbose=False):
     """DEPRECATED
     Function to get all the items you need for manipulating items when working your word2vec model.
     Returns the data which is only in the vocabulary of your model.
@@ -33,11 +33,12 @@ def get_word2vec_items_tuple(model, data):
             solutions_vocab.append(solution)
             full_solutions_vocab.append(full_solution)
         except KeyError:
-            print("Word '{}' is not in vocabulary of your model, therefore it won't be in your visualization.".format(solution))
+            if verbose:
+                print("Word '{}' is not in vocabulary of your model, therefore it won't be in your visualization.".format(solution))
     return X, labels, solutions_vocab, full_solutions_vocab
 
 
-def get_word2vec_items(model, data):
+def get_word2vec_items(model, data, verbose=False):
     """Returns list of word vectors for data which is only in the vocabulary of your model
     and the dataframe based on the model. 2 columns are added - 'solution' and 'full solution'.
 
@@ -58,7 +59,8 @@ def get_word2vec_items(model, data):
             X.append(model.wv[solution])
             ids.append(id)
         except KeyError:
-            print("Word '{}' is not in vocabulary of your model, therefore it's not in the resulting data.".format(
+            if verbose:
+                print("Word '{}' is not in vocabulary of your model, therefore it's not in the resulting data.".format(
                 solution))
     return X, data[data['id'].isin(ids)].copy()
 
