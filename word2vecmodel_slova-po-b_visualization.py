@@ -17,7 +17,7 @@ slova_po_b_all = pd.read_csv('data/processed/vyjmenovana_slova_po_b.csv')
 # + you can continue training with the loaded model!
 model = Word2Vec.load('utils/word2vec.model')
 X, data = get_word2vec_items(model, slova_po_b_all)
-data = label_data(data, SLOVA_PO_B)
+label_data(data, SLOVA_PO_B)
 
 # ----------------------------------
 # t-SNE

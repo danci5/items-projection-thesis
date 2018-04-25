@@ -23,7 +23,6 @@ def minimum_edit_distance(s1, s2):
                                              distances[index1 + 1],
                                               new_distances[-1])))
         distances = new_distances
-
     return distances[-1]
 
 
@@ -40,7 +39,7 @@ def minimum_edit_distance(s1, s2):
 
 
 def levenshtein_similarity(s1, s2):
-    """Basic levenshtein similarity with another way for normalization.
+    """Basic levenshtein similarity with normalization.
 
     normalization: (max(len(s1),len(s2)) - ed(s1,s2)) / max(len(s1),len(s2)
     """
@@ -48,8 +47,10 @@ def levenshtein_similarity(s1, s2):
 
 
 if __name__ == '__main__':
-    # print(minimum_edit_distance("byl", "nebyl"))
-    # print(minimum_edit_distance("ab", "ac"))
+    print(minimum_edit_distance("byl", "nebyl"))
+    print(minimum_edit_distance("ab", "ac"))
     print(levenshtein_similarity("Jones", "Johnson"))
     print(levenshtein_similarity("Paul", "Paul"))
+    print(levenshtein_similarity("bylinkář", "bylina"))
+    print(levenshtein_similarity("Manhattan", "Manahaton"))
 
