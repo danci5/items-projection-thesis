@@ -3,7 +3,7 @@ import seaborn as sns
 from data.prepare_data import *
 from data.prepare_word2vec_ed import *
 import matplotlib.pyplot as plt
-from similarities.text_similarities import levenshtein_similarity, levenshtein_similarity2
+from similarities.text_similarities import levenshtein_similarity
 
 model = Word2Vec.load('utils/word2vec.model')
 slova_po_b = pd.read_csv('data/processed/vyjmenovana_slova_po_b.csv')
@@ -11,15 +11,15 @@ X, data = get_word2vec_items(model, slova_po_b)
 # data - only words which are also in my word2vec model
 
 ### ED ###
-# edit1 = create_edit_similarity_matrix(data['full_solution'], data['solution'], levenshtein_similarity)
-# edit1 = edit1.astype(float)
-# edit1.to_csv('data/processsed/levenshtein_similarity_matrix_slova-po-b.csv')
-edit1 = pd.read_csv('data/processed/levenshtein_similarity_matrix_slova-po-b.csv', index_col=0)
+edit1 = create_edit_similarity_matrix(data['full_solution'], data['solution'], levenshtein_similarity)
+edit1 = edit1.astype(float)
+edit1.to_csv('data/processsed/levenshtein_similarity_matrix_slova-po-b.csv')
+#edit1 = pd.read_csv('data/processed/levenshtein_similarity_matrix_slova-po-b.csv', index_col=0)
 
 ### word2vec ###
-# word2vec = create_word2vec_similarity_matrix(model, data['full_solution'], data['solution'])
-# word2vec.to_csv('data/processed/word2vec_words_similarity_matrix_slova_po_b.csv')
-word2vec = pd.read_csv('data/processed/word2vec_similarity_matrix_slova-po-b.csv', index_col=0)
+word2vec = create_word2vec_similarity_matrix(model, data['full_solution'], data['solution'])
+word2vec.to_csv('data/processed/word2vec_words_similarity_matrix_slova_po_b.csv')
+#word2vec = pd.read_csv('data/processed/word2vec_similarity_matrix_slova-po-b.csv', index_col=0)
 
 ### pearson ###
 vyjm_slova_filtered = slova_po_b.loc[slova_po_b['question'].isin(data['question'])]

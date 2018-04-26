@@ -29,7 +29,7 @@ if __name__ == '__main__':
     input, output = sys.argv[1:3]
 
     i = 0
-    wiki = WikiCorpus(input, lemmatize=False, dictionary={})
+    wiki = WikiCorpus(input, lemmatize=False, dictionary={}, lower=False)
     with open(output, 'w') as out:
         for text in wiki.get_texts():
             out.write(" ".join(text) + "\n")

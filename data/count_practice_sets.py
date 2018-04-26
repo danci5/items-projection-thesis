@@ -1,3 +1,5 @@
+# The counts contain all answers (no duplicated answers from user on one question) for practice sets
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
@@ -35,6 +37,6 @@ if __name__ == '__main__':
     system_ps_problem = pd.read_csv('data/system_ps_problem.csv', sep=';')
     system_ps = pd.read_csv('data/system_ps.csv', sep=';')
 
-    basic_data = merge_logs_with_questions(logs, questions)
+    basic_data = merge_logs_with_questions(logs, questions).drop_duplicates(['user', 'question_id'], keep='first')
     ps_data = merge_data_with_practice_sets(basic_data, system_ps_problem, system_ps)
     plot_practice_sets_with_most_answers(ps_data, system_ps)
