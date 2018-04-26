@@ -37,6 +37,20 @@ def merge_data_with_practice_sets(logs_questions, practice_sets, ps_mapping):
     return crucial_data
 
 
+def get_data_by_knowledge_component(ps_data, kc_number):
+    """
+    ATTENTION: The knowledge component mapping is quite messy. They contain words which they shouldn't contain. 
+    Rather check the practice_set_numbers, which you want and use get_data_for_practice_sets. 
+    
+    input is - parameter ps_data from 'merge_data_with_practice_sets'
+    parameter kc_number is the id of knowledge component from the dataset
+
+    example: get_data_by_knowledge_component(ps_data, 26) would return
+    the dataset of Vyjmenovaná slova B - 26 is its id
+    """
+    return ps_data[ps_data['parent_kc'] == kc_number].drop_duplicates(['user', 'question_id'], keep='first').drop_duplicates(['id'], keep='first')
+
+
 def get_data_for_practice_sets(practice_sets_numbers, crucial_data):
     """
     input is from 'merge_data_with_practice_sets'
