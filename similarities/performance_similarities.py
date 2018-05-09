@@ -1,7 +1,3 @@
-# Similarity measures mainly from https://www.fi.muni.cz/~xpelanek/publications/similarity-measures.pdf
-# TODO: add similarities from the article
-
-
 def drop_nans(similarity_matrix):
     """Removes NaN values from matrix and returns the matrix."""
 
@@ -20,13 +16,18 @@ def replace_nans_with_zero(similarity_matrix):
     return similarity_matrix.fillna(0)
 
 
-def pearson_similarity(matrix):
-    return drop_nans(matrix.corr())
+def pearson_similarity(matrix, no_nans=False):
+    if no_nans:
+        return drop_nans(matrix.corr())
+    else:
+        return matrix.corr()
 
 
-def doublepearson_similarity(matrix):
-    return pearson_similarity(pearson_similarity(matrix))
-
+def doublepearson_similarity(matrix, no_nans=False):
+    if no_nans:
+        return pearson_similarity(pearson_similarity(matrix, drop_nans), drop_nans)
+    else:
+        return pearson_similarity(pearson_similarity(matrix))
 
 def jaccard_similarity():
     pass

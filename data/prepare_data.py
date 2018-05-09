@@ -37,10 +37,22 @@ def merge_data_with_practice_sets(logs_questions, practice_sets, ps_mapping):
     return crucial_data
 
 
+def get_ps_data():
+    logs = pd.read_csv('data/nova_doplnovacka_log.csv', sep=';')
+    questions = pd.read_csv('data/nova_doplnovacka_questions.csv', sep=';')
+    system_ps_problem = pd.read_csv('data/system_ps_problem.csv', sep=';')
+    system_ps = pd.read_csv('data/system_ps.csv', sep=';')
+    system_kc = pd.read_csv('data/system_kc.csv', sep=';')
+    basic_data = merge_logs_with_questions(logs, questions)
+    ps_data = merge_data_with_practice_sets(basic_data, system_ps_problem, system_ps)
+    return ps_data 
+
+
 def get_data_by_knowledge_component(ps_data, kc_number):
     """
-    ATTENTION: The knowledge component mapping is quite messy. They contain words which they shouldn't contain. 
-    Rather check the practice_set_numbers, which you want and use get_data_for_practice_sets. 
+    ATTENTION: The knowledge component mapping is sometimes messy. They contain practice sets and
+    words which they shouldn't contain. 
+    Sometimes rather check the practice_set_numbers, which you want and use get_data_for_practice_sets. 
     
     input is - parameter ps_data from 'merge_data_with_practice_sets'
     parameter kc_number is the id of knowledge component from the dataset
@@ -101,11 +113,11 @@ def reshape_to_correctness_matrix(data):
         return data
 
 
-def correctness_matrix_to_similarity_matrix(method, matrix):
+def correctness_matrix_to_similarity_matrix(method, matrix, no_nans=False):
     if method == 'pearson':
-        similarity_matrix = pearson_similarity(matrix)
+        similarity_matrix = pearson_similarity(matrix, no_nans)
     elif method == 'doublepearson':
-        similarity_matrix = doublepearson_similarity(matrix)
+        similarity_matrix = doublepearson_similarity(matrix, no_nans)
 
     return similarity_matrix
 

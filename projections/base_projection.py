@@ -32,7 +32,7 @@ class Projection():
         # TODO: generate list containing random colors, not hardcoded
         if 'manual_label' not in self.data.columns:
             raise ValueError("Data are not labeled into groups.")
-        colors = ['blue', 'green', 'red', 'darkcyan', 'magenta', 'yellow', 'darkgray', 'purple']
+        colors = ['blue', 'green', 'red', 'darkcyan', 'magenta', 'orange', 'darkgray', 'purple']
         self.data.reset_index(drop=True, inplace=True)
         for i, row in self.data.iterrows():
             if row['manual_label'] != 0:

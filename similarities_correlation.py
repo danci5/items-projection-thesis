@@ -1,8 +1,10 @@
-from gensim.models import Word2Vec
+import pandas as pd
 import seaborn as sns
+import matplotlib.pyplot as plt
+from gensim.models import Word2Vec
+
 from data.prepare_data import *
 from data.prepare_word2vec_ed import *
-import matplotlib.pyplot as plt
 from similarities.text_similarities import levenshtein_similarity
 
 model = Word2Vec.load('utils/word2vec.model')
@@ -34,9 +36,6 @@ similarities['pearson'] = pearson2.values.flatten()
 similarities['word2vec'] = word2vec.values.flatten()
 similarities['lev1'] = edit1.values.flatten().astype(float)
 similarities_final = similarities.corr()
-
-# TODO: add similarities from the article
-# Then I should maybe fill 0 instead of removing NaN values
 
 # matplotlib correlation matrix plot matshow
 # plt.matshow(similarities_final.corr())

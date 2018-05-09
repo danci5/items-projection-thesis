@@ -37,6 +37,8 @@ def minimum_edit_distance(s1, s2):
 #     """
 #     return 1 - distance_ratio(s1, s2)
 
+def levenshtein_similarity_with_threshold(s1, s2, M=5):
+    return 1 - (min(minimum_edit_distance(s1, s2), M) / M)
 
 def levenshtein_similarity(s1, s2):
     """Basic levenshtein similarity with normalization.
