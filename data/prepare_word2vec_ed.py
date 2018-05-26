@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
-from data.prepare_data import get_solutions
+from data.prepare_data import get_ps_data, get_vyjmenovana_slova_po_b
 from similarities.text_similarities import levenshtein_similarity
 
 
@@ -50,27 +50,6 @@ def create_word2vec_similarity_matrix(model, full_solutions, solutions):
                 dataframe.loc[j, l] = model.wv.similarity(i, k)
     return dataframe
 
-def create_word2vec_similarity_matrix2(model, full_solutions, solutions):
-    """
-    Parameter 'model' is the model which you want to build your word2vec matrix on. It's the instance which you loaded before.
-    Parameter 'index' - index values for similarity matrix
-    Parameter 'solutions' - words on which the similarity matrix is computed
-    Similarity is computed only on the words which contain the "fill-in-the-blank" place.
-    
-    Example: 
-    -'sb_rka známek' and 'b_lá barva' 
-    -edit distance is counted on 'sbírka' and 'bíla'
-    -index in the matrix are going to be the full solutions 'sbírka známek' and 'bíla barva'
-    """
-    dataframe = pd.DataFrame(index=full_solutions,columns=full_solutions)
-    for i, j in zip(solutions, full_solutions):
-        for k, l in zip(solutions, full_solutions):
-            if np.isnan(dataframe.loc[j, l]):
-                value = model.wv.similarity(i, k)
-                dataframe.loc[j, l] = value
-                dataframe.loc[l, j] = value
-    return dataframe
-
 
 def create_edit_similarity_matrix(index, solutions, similarity_function=levenshtein_similarity):
     """
@@ -88,33 +67,14 @@ def create_edit_similarity_matrix(index, solutions, similarity_function=levensht
         for k, l in zip(solutions, index):
                 dataframe.loc[j, l] = similarity_function(i, k)
     return dataframe
-    
-def create_edit_similarity_matrix2(index, solutions, similarity_function=levenshtein_similarity):
-    """
-    Parameter 'index' - index values for similarity matrix
-    Parameter 'solutions' - words on which the similarity matrix is computed
-    Similarity is computed only on the words which contain the "fill-in-the-blank" place.
-    
-    Example: 
-    -'sb_rka známek' and 'b_lá barva' 
-    -edit distance is counted on 'sbírka' and 'bíla'
-    -index in the matrix are going to be the full solutions 'sbírka známek' and 'bíla barva'
-    """
-    dataframe = pd.DataFrame(index=index,columns=index)
-    for i, j in zip(solutions, index):
-        for k, l in zip(solutions, index):
-            if np.isnan(dataframe.loc[j, l]):
-                value = similarity_function(i, k)
-                dataframe.loc[j, l] = value
-                dataframe.loc[l, j] = value
-    return dataframe    
 
 if __name__ == '__main__':
     os.chdir('/home/daniel/school/BP/pythesis')
-    # example of word2vec similarity matrix creation for practice sets about 'slova po b'
+    # example of word2vec similarity matrix creation for practice sets about 'Vyjmenovana slova B'
     from gensim.models import Word2Vec
     model = Word2Vec.load('utils/word2vec.model')
-    slova_po_b = pd.read_csv('data/processed/vyjmenovana_slova_po_b.csv')
+    ps_data = get_ps_data()
+    slova_po_b = get_vyjmenovana_slova_po_b(ps_data)
     X, data = get_word2vec_items(model, slova_po_b)
     word2vec_similarity_matrix = create_word2vec_similarity_matrix(model, data['question_id'], data['solution'])
-    word2vec_similarity_matrix.to_csv('data/processed/word2vec_similarity_matrix_slova-po-b2.csv')
+    word2vec_similarity_matrix.to_csv('data/word2vec_similarity_matrix_slova-po-b.csv')

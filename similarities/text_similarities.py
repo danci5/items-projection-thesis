@@ -1,6 +1,4 @@
-# edit distance
-# word2vec is in prepare_word2vec
-
+# word2vec is in utils/
 
 def minimum_edit_distance(s1, s2):
     """
@@ -26,26 +24,18 @@ def minimum_edit_distance(s1, s2):
     return distances[-1]
 
 
-# def distance_ratio(s1, s2):
-#     return minimum_edit_distance(s1, s2) / max(len(s1), len(s2))
-#
-#
-# def levenshtein_similarity(s1, s2):
-#     """Basic levenshtein similarity.
-#
-#     normalization: ed(s1,s2) / max(len(s1),len(s2))
-#     """
-#     return 1 - distance_ratio(s1, s2)
+def levenshtein_similarity(s1, s2):
+    """Basic levenshtein similarity."""
+    return (max(len(s1), len(s2)) - minimum_edit_distance(s1, s2)) / (max(len(s1), len(s2)))
+
+
+def levenshtein_similarity2(s1, s2):
+    """Basic levenshtein similarity."""
+    return 1 - (minimum_edit_distance(s1, s2) / max(len(s1), len(s2)))
+
 
 def levenshtein_similarity_with_threshold(s1, s2, M=5):
     return 1 - (min(minimum_edit_distance(s1, s2), M) / M)
-
-def levenshtein_similarity(s1, s2):
-    """Basic levenshtein similarity with normalization.
-
-    normalization: (max(len(s1),len(s2)) - ed(s1,s2)) / max(len(s1),len(s2)
-    """
-    return (max(len(s1), len(s2)) - minimum_edit_distance(s1, s2)) / (max(len(s1), len(s2)))
 
 
 if __name__ == '__main__':

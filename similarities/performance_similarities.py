@@ -28,22 +28,3 @@ def doublepearson_similarity(matrix, no_nans=False):
         return pearson_similarity(pearson_similarity(matrix, drop_nans), drop_nans)
     else:
         return pearson_similarity(pearson_similarity(matrix))
-
-def jaccard_similarity():
-    pass
-
-
-def cohen_similarity():
-    pass
-
-
-def yule_similarity():
-    pass
-
-
-def ochiai_similarity():
-    pass
-
-
-def sokal_similarity():
-    pass

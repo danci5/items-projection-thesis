@@ -52,7 +52,7 @@ def get_data_by_knowledge_component(ps_data, kc_number):
     """
     ATTENTION: The knowledge component mapping is sometimes messy. They contain practice sets and
     words which they shouldn't contain. 
-    Sometimes rather check the practice_set_numbers, which you want and use get_data_for_practice_sets. 
+    Sometimes rather check the practice_set_numbers, which you want and use get_data_for_practice_sets(). 
     
     input is - parameter ps_data from 'merge_data_with_practice_sets'
     parameter kc_number is the id of knowledge component from the dataset
@@ -133,8 +133,9 @@ def get_labels_and_practice_sets_for_similarity_matrix(matrix, pre_matrix_data):
     return labels, practice_sets
 
 
-class MoreUnderscoresError(Exception):
-    """Raise when you get word with more underscores => more holes to fill in by student"""
+class UnderscoresError(Exception):
+    """Raise when you get word with 0 underscores or more underscores than 1 => more holes to fill in by student.
+    NOTE: Now there are just questions with 0 or 1 underscore in the dataset."""
 
 
 def get_solutions(data, method='fillin'):
@@ -151,8 +152,8 @@ def get_solutions(data, method='fillin'):
 
     solutions = []
     for index, row in data.iterrows():
-        if row['question'].count('_') > 1:
-            raise MoreUnderscoresError()
+        if row['question'].count('_') != 1:
+            raise UnderscoresError()
         
         if method == 'full':
             full_solution = row['question'].replace('_', row['correct_answer'])
