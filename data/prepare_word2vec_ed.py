@@ -18,7 +18,7 @@ def get_word2vec_items(model, data, verbose=False):
     data['full_solution'] = get_solutions(data, method='full')
     X, ids = [], []
 
-    for id, solution in zip(data['id'], data['solution']):
+    for id, solution, question in zip(data['id'], data['solution'], data['question']):
         try:
             # in slova_po_b is the word 'bicí' a big outlier in visualization, i'd rather get rid of it
             if solution == 'bicí':
@@ -27,8 +27,8 @@ def get_word2vec_items(model, data, verbose=False):
             ids.append(id)
         except KeyError:
             if verbose:
-                print("Word '{}' is not in vocabulary of your model, therefore it's not in the resulting data.".format(
-                solution))
+                print("Word '{}' in question '{}' is not in vocabulary of your model, therefore it's not in the resulting data.".format(
+                solution, question))
     return X, data[data['id'].isin(ids)].copy()
 
 

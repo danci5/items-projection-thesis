@@ -16,7 +16,7 @@ KONCOVKY_PRID_JMEN = [
     ['s kozím sýrem', 'škrábnutí orlím pařátem', 's pštrosím perem', 
     'Příchozí byli ohlášeni veselým psím štěkotem.'], 
     ['z žabích jiker', 'o pavích perech'], 
-    ['drazí rodiče', 'ryzí stříbrom', 'cizí člověk', 'březí samice', 'Učím se cizím řečem.'], 
+    ['drazí rodiče', 'cizí člověk', 'březí samice', 'Učím se cizím řečem.'], 
     ['malí jedlíci', 'lesklí slepýši', 'lesklí kapři', 'Bílí ptáci vzlétli.', 'hladoví kluci', 
     'známí lidé', 'lidoví pěvci', 'marniví manekýni'], 
     ['o hladových medvědech', 'jahodových mýdlech', 'v tmavých hvozdech', 
