@@ -15,7 +15,6 @@ from gensim.models.word2vec import Word2Vec
 if __name__ == '__main__':
     program = os.path.basename(sys.argv[0])
     logger = logging.getLogger(program)
-
     logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s')
     logging.root.setLevel(level=logging.INFO)
     logger.info("Running %s", ' '.join(sys.argv))
@@ -24,14 +23,12 @@ if __name__ == '__main__':
         print(__doc__)
         sys.exit(1)
 
-    input, output = sys.argv[1:3]
-
+    inp, outp = sys.argv[1:3]
     params = {
         'size': 200,
         'window': 5,
         'min_count': 5,
         'workers': multiprocessing.cpu_count() - 1
     }
-
-    model = Word2Vec(LineSentence(input), **params)
-    model.save(output)
+    model = Word2Vec(LineSentence(inp), **params)
+    model.save(outp)
