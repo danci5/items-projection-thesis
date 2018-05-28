@@ -34,8 +34,8 @@ class Projection():
             plt.savefig('visualizations/matplotlib/%s.png' % title)
         plt.show()
 
-    def matplotlib_plot_with_manual_labels(self, figsize=(30,20), annotate=True, export=True,
-                                           save_path='visualizations/vis.png', title='default'):
+    def matplotlib_plot_with_manual_labels(self, figsize=(30,20), annotate=True, export=True, markersize=20,
+                                           save_path='visualizations/vis.png', title='default', titlesize=25):
         """Creates visualization by Matplotlib.
 
         Words are colored and divided into groups (according to manual labeling), which you can filter.
@@ -48,6 +48,8 @@ class Projection():
             True if you want annotations in your visualization, False if you want just a scatter plot
         export : bool
             True if you want to save your visualization
+        markersize: int
+            Size of the marker for labeled items
         save_path : str
             Path where the visualization will be saved, if the export value is True
         title : str
@@ -59,16 +61,16 @@ class Projection():
         self.data.reset_index(drop=True, inplace=True)
         for i, row in self.data.iterrows():
             if row['manual_label'] != 0:
-                plt.scatter(self.x_positions[i], self.y_positions[i], c=colors[row['manual_label'] - 1])
+                plt.scatter(self.x_positions[i], self.y_positions[i], c=colors[row['manual_label'] - 1], s=markersize)
                 if annotate:
-                    plt.annotate(row['question'], xy=(self.x_positions[i], self.y_positions[i]),
+                    plt.annotate(row['question'], xy=(self.x_positions[i]+0.5, self.y_positions[i]),
                                  color=colors[row['manual_label'] - 1])
             else:
                 plt.scatter(self.x_positions[i], self.y_positions[i], c='black')
                 if annotate:
                     plt.annotate(row['question'], xy=(self.x_positions[i], self.y_positions[i]), color='black')
         plt.gcf().set_size_inches(figsize[0], figsize[1])
-        plt.title(title)
+        plt.title(title, fontsize=titlesize)
         if export and save_path.startswith('visualizations/'):
             plt.savefig(save_path)
         plt.show()
@@ -93,6 +95,9 @@ class Projection():
 
         manual_labels = plotly_data['manual_label'].unique()
         traces = []
+        
+        colors = { 0: 'rgb(0,0,0)', 1: 'rgb(0,0,255)', 2: 'rgb(50,205,50)', 3: 'rgb(255,0,0)', 
+                  4: 'rgb(0,139,139)', 5: 'rgb(255,0,255)', 6: 'rgb(255,165,0)', 7: 'rgb(128,128,128)', 8: 'rgb(128,0,128)' }
 
         for label in manual_labels:
             current_trace = plotly_data[plotly_data['manual_label'] == label]
@@ -103,7 +108,11 @@ class Projection():
                 name='GROUP {0}'.format(label) if label != 0 else 'UNLABELED DATA',
                 text=current_trace['question'],
                 hoverinfo='text',
-                textposition='middle right'
+                textposition='middle right',
+                marker = dict(
+                    size = 5 if label == 0 else 15,
+                    color = colors[label],
+                )
             )
             traces.append(trace)
 
