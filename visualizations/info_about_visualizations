@@ -2,8 +2,8 @@ perplexity-*-impact 		– visualizations showing impact of perplexity
 pca-* 				– visualizations of (only) labeled items
 tsne-vs-pca-* 			– visualizations that show the differences in performance of TSNE and PCA
 hierarchicalclustering-* 	– 2 dendrograms
-randindex-barplot 		– barplot that shows randindex values of the measures performance on labeled items (hierarchical clustering was used)
-plotly-vyjmenovanaslovaB-*	– sample visualizations by plotly, which gives us the ability to interact
+randindex-barplot 		– barplot that shows randindex values – performance of measures on labeled items (hierarchical clustering was used)
+plotly-vyjmenovanaslovaB-*	– sample visualizations by plotly, which give us the ability to interact
 tsne-vyjmenovanaslovaB-*	– matplotlib scatter plots of the plotly visualizations
 counts-*			– counts of answers
 

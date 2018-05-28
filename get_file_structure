@@ -1,1 +1,0 @@
-tree -I "word2vec*|cswiki*|wiki.cs.text|__init__.py|pythesis_folder_structure|system_*|nova_*|homola-data.zip|README" > README

@@ -35,7 +35,7 @@ class Projection():
         plt.show()
 
     def matplotlib_plot_with_manual_labels(self, figsize=(30,20), annotate=True, export=True, markersize=20,
-                                           save_path='visualizations/vis.png', title='default', titlesize=25):
+                                           save_path='visualizations/vis.png', title='default', titlesize=25, unlabeled_markersize):
         """Creates visualization by Matplotlib.
 
         Words are colored and divided into groups (according to manual labeling), which you can filter.
@@ -54,6 +54,8 @@ class Projection():
             Path where the visualization will be saved, if the export value is True
         title : str
             Title of the visualization
+        titlesize : int
+            Size of the title in Figure.
         """
         if 'manual_label' not in self.data.columns:
             raise ValueError("Data are not labeled into groups.")
@@ -66,7 +68,7 @@ class Projection():
                     plt.annotate(row['question'], xy=(self.x_positions[i]+0.5, self.y_positions[i]),
                                  color=colors[row['manual_label'] - 1])
             else:
-                plt.scatter(self.x_positions[i], self.y_positions[i], c='black')
+                plt.scatter(self.x_positions[i], self.y_positions[i], c='black', s=unlabeled_markersize)
                 if annotate:
                     plt.annotate(row['question'], xy=(self.x_positions[i], self.y_positions[i]), color='black')
         plt.gcf().set_size_inches(figsize[0], figsize[1])
@@ -75,7 +77,7 @@ class Projection():
             plt.savefig(save_path)
         plt.show()
 
-    def plotly_with_manual_labels(self, annotate=True, save_path='visualizations/vis.html', title='default'):
+    def plotly_with_manual_labels(self, annotate=True, save_path='visualizations/vis.html', title='default', unlabeled_markersize):
         """Creates visualization by Plotly.
 
         Words are colored and divided into groups (according to manual labeling), which you can filter.
