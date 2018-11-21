@@ -1,0 +1,27 @@
+.
+├── clustering.html
+├── clustering.ipynb
+├── correlations.html
+├── correlations.ipynb
+├── counts_of_answers_questions.html
+├── counts_of_answers_questions.ipynb
+├── data
+│   ├── prepare_data.py
+│   └── prepare_word2vec_ed.py
+├── manual_labeling
+│   ├── koncovky_prid_jmena
+│   ├── labeled_data.py
+│   └── slova_po_b
+├── projections
+│   └── base_projection.py
+├── projections.html
+├── projections.ipynb
+├── similarities
+│   ├── performance_similarities.py
+│   └── text_similarities.py
+├── utils
+│   ├── create_word2vec_model.py
+│   └── process_wiki.py
+└── visualizations				
+    ├── info_about_visualizations
+    └── *.png, *.html

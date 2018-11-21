@@ -1,8 +1,7 @@
 """
 Usage: python process_wiki.py cswiki-latest-pages-articles.xml.bz2 wiki.cs.text
 
-Script for converting articles from a Wikipedia dump to a file containing the texts from the
-articles. A single line is an article, articles are separated by a new line.
+Script for converting articles from a Wikipedia dump to a file. A line in that file is a text of an article.
 
 Download latest CS Wikipedia dump from:
 - https://dumps.wikimedia.org/cswiki/latest/cswiki-latest-pages-articles.xml.bz2
@@ -15,10 +14,10 @@ import os.path
 import sys
 from gensim.corpora import WikiCorpus
 
+
 if __name__ == '__main__':
     program = os.path.basename(sys.argv[0])
     logger = logging.getLogger(program)
-
     logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s')
     logging.root.setLevel(level=logging.INFO)
     logger.info("Running %s", ' '.join(sys.argv))
@@ -26,11 +25,11 @@ if __name__ == '__main__':
     if len(sys.argv) < 3:
         print(__doc__)
         sys.exit(1)
-    input, output = sys.argv[1:3]
+    inp, outp = sys.argv[1:3]
 
     i = 0
-    wiki = WikiCorpus(input, lemmatize=False, dictionary={}, lower=False)
-    with open(output, 'w') as out:
+    wiki = WikiCorpus(inp, lemmatize=False, dictionary={}, lower=False)
+    with open(outp, 'w') as out:
         for text in wiki.get_texts():
             out.write(" ".join(text) + "\n")
             i += 1
